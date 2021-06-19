@@ -6,8 +6,10 @@ from indexes import ndvi
 from crop import cropping
 import subprocess as sub
 
-qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code']
+qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code']  # QGIS shell command to run script on PyQgis
 
+
+# Working Computer path´s
 if socket.gethostname() == 'DESKTOP-K8VPKQJ':
     os.chdir('C:/Users/Eduardo Godinho/Desktop/cassini')
     qgis_call.append('"D:/Startup_Voucher/Projetos/202112_Citizeen_Cassini/python_qgis.py"')
