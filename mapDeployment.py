@@ -23,7 +23,7 @@ def map_app(save_dir, satImages, popupImgDatabase, galileo_position=[40.2059, -8
         new_img.save(df['Image Name'][i], optimize=True)
         encoded = base64.b64encode(open(df['Image Name'][i], 'rb').read())
 
-        html_photo = '<p style="font-family:Roboto; font-size: 15px"><b>Date:</b> {}</p>' \
+        html_photo = '<p style="font-family:Arial; font-size: 15px"><b>Date:</b> {}</p>' \
                      '<center><img src="data:image/jpeg;base64,{}"></center>'.format
         iframe = branca.element.IFrame(html_photo(df['Dates'][i], encoded.decode('UTF-8')), width=180, height=180)
         popup = folium.Popup(iframe, max_width=1000, parse_html=True)
@@ -32,7 +32,7 @@ def map_app(save_dir, satImages, popupImgDatabase, galileo_position=[40.2059, -8
                       popup=popup).add_to(m)
     folium.features.LatLngPopup().add_to(m)
     m.add_child(googleMaps)
-    html_position = '<center><p style="font-family:Roboto; font-size: 12px"> You are here!</p></center>'
+    html_position = '<center><p style="font-family:Arial; font-size: 12px"> You are here!</p></center>'
     iframe_position = branca.element.IFrame(html_position,width=105, height=34)
     popup_position = folium.Popup(iframe_position, parse_html=True)
     folium.Marker(location=galileo_position,
@@ -43,7 +43,7 @@ def map_app(save_dir, satImages, popupImgDatabase, galileo_position=[40.2059, -8
     webbrowser.open('citizeen.html')
 
 
-map_app('C:/Users/Eduardo Godinho/Desktop/cassini', 0, 'database.csv')
+map_app('/home/eouser/Downloads/', 0, 'database.csv')
 
 #
 # print(df['Image Name'][0])
