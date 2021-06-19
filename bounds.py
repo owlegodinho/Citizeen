@@ -44,8 +44,3 @@ def get_bounds(filepath):
         corrected_bounds = np.array([bounds[0], bounds[1], bounds[2], bounds[3]])
     return corrected_bounds
 
-
-file_path = "D:/Startup_Voucher/Projetos/202106_MORADIA_CBD/_base/NDMI/dados_brutos/Cropped_NDMI_2020-01-10.tif"
-# convert_crs(file_path, 'C:/Users/Eduardo Godinho/Desktop')
-# img_bounds = get_bounds(file_path)
-# print(img_bounds)
