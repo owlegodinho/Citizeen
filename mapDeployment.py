@@ -58,6 +58,3 @@ def map_app(satImages, popupImgDatabase, galileo_position=(40.2059, -8.4241), si
     m.save('citizeen.html')
     print('aqui')
     webbrowser.open('citizeen.html')
-
-
-os.chdir('C:/Users/Eduardo Godinho/Desktop/cassini')
