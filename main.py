@@ -6,15 +6,23 @@ from indexes import ndvi
 from crop import cropping
 import subprocess as sub
 
+qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code']
+
 if socket.gethostname() == 'DESKTOP-K8VPKQJ':
     os.chdir('C:/Users/Eduardo Godinho/Desktop/cassini')
-elif socket.gethostname() == 'DESKTOP-K8VPKQJ': # corre apenas esta linha num print para saberes qual é
-    os.chdir('C:/Users/Illya Grytsayev/Desktop/cassini')
+    qgis_call.append('"D:/Startup_Voucher/Projetos/202112_Citizeen_Cassini/python_qgis.py"')
+elif socket.gethostname() == 'DESKTOP-M053QQK': # corre apenas esta linha num print para saberes qual é
+    os.chdir('C:/Users/Illya Grytsayev/Desktop/OWL/cassini')
+    qgis_call.append('"C:/Users/Illya Grytsayev/PycharmProjects/Citizeen/python_qgis.py"')
+
 # crs, imagePath = ndvi('S2A_MSIL2A_20210504T112111_N0300_R037_T29TNE_20210504T143002'
 #      '/S2A_MSIL2A_20210504T112111_N0300_R037_T29TNE_20210504T143002.SAFE/'
 #      'GRANULE/L2A_T29TNE_A030636_20210504T112445/IMG_DATA/R10m', 'processed')
 
 # cropping('processed/NDVI__20210504T112111.tif','jardim_bot.geojson', 'corrected_crs')
 # map_app('C:/Users/Eduardo Godinho/Desktop/cassini', 0, 'database.csv')
-qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis']
+
 sub.Popen(qgis_call, stdout=sub.PIPE, stderr=sub.PIPE)
+
+# Command
+# qgis --nologo --code "C:/Users/Illya Grytsayev/PycharmProjects/OWL-Our-Watch-Leads/OWL_Sentinel/test_python_qgis.py"
