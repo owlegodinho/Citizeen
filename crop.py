@@ -1,4 +1,6 @@
 import glob
+
+import numpy as np
 from fiona.crs import from_epsg
 import geopandas
 import rasterio
@@ -8,7 +10,11 @@ import os
 
 
 def crop_image(save_directory, AOI_path, crs, images):
-    data_proj_path = glob.glob(AOI_path + '/*.geojson')
+
+    for root, dirs, files in os.walk(AOI_path):
+        for file in files:
+            if file.endswith('.geojson'):
+                data_proj_path = os.path.join(root,file)
 
     data = geopandas.read_file(data_proj_path[0])
     data_proj = data.copy()
@@ -31,7 +37,7 @@ def crop_image(save_directory, AOI_path, crs, images):
                          "height": out_image.shape[1],
                          "width": out_image.shape[2],
                          "transform": out_transform,
-                         "nodata":-999})
+                         "nodata":np.NaN})
         filepath = save_directory + 'Cropped_' + os.path.basename(images[f])                     # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API 51: -----> qgis 55:
         with rasterio.open(filepath, "w", **out_meta) as dest:
             dest.write(out_image)
@@ -40,3 +46,4 @@ def crop_image(save_directory, AOI_path, crs, images):
 
 
 # crop_image('D:/Startup_Voucher/Projetos/One_year_test/Cropped', 'D:/Startup_Voucher/Projetos/One_year_test', 32629, )
+a= crop_image(0,'/home/eouser/Downloads/',0,0)

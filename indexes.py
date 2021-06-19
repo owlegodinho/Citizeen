@@ -37,39 +37,6 @@ def ndvi(directory_path, process_path):
     return b4_crs, ndvi_path
 
 
-def savi(directory_path, process_path):
-
-    savi_path = list()
-    bands_4 = list()
-    bands_8 = list()
-    for root, dirs, files in os.walk(directory_path, topdown=False):
-        for name in files:
-            if name.endswith('B04_10m.jp2'):                                # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> qgis 'B04_10m.jp2' -----> API 'B04.jp2'
-                bands_4.append(os.path.join(root, name))
-            elif name.endswith('B08_10m.jp2'):                              # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> qgis 'B04_10m.jp2' -----> API 'B08.jp2'
-                bands_8.append(os.path.join(root, name))
-    b4 = rasterio.open(bands_4[0])
-    b4_crs = str(b4.crs)
-    b4_crs = int(b4_crs[5:])
-    b4_profile = b4.profile
-    b4_profile.update({"driver": "GTiff",
-                       "dtype": "float64"})
-    for b in range(0, len(bands_4)):
-        b4 = rasterio.open(bands_4[b])
-        b8 = rasterio.open(bands_8[b])
-
-        b4 = b4.read()
-        b8 = b8.read()
-        np.seterr(divide='ignore', invalid='ignore')
-
-        # Calculate NDVI
-        savi = (b4.astype(float) - b8.astype(float)) / (b4 + b8 + 0.5) * 1.5
-        filedate = bands_4[b][-28:-12]                                      # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API -28:-12 -----> qgis -23:-8
-        savi_path.append(process_path + 'SAVI_' + filedate + '.tif')
-        with rasterio.open(savi_path[b], "w", **b4_profile) as dest:
-            dest.write(savi)
-    return b4_crs, savi_path
-
 
 def mi(directory_path, process_path):
 
@@ -104,38 +71,5 @@ def mi(directory_path, process_path):
             dest.write(mi)
     return b11_crs, mi_path
 
-
-def msavi(directory_path, process_path):
-
-    msavi_path = list()
-    bands_4 = list()
-    bands_8 = list()
-    for root, dirs, files in os.walk(directory_path, topdown=False):
-        for name in files:
-            if name.endswith('B04_10m.jp2'):                                # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> qgis 'B04_10m.jp2' -----> API 'B04.jp2'
-                bands_4.append(os.path.join(root, name))
-            elif name.endswith('B08_10m.jp2'):                              # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> qgis 'B04_10m.jp2' -----> API 'B08.jp2'
-                bands_8.append(os.path.join(root, name))
-    b4 = rasterio.open(bands_4[0])
-    b4_crs = str(b4.crs)
-    b4_crs = int(b4_crs[5:])
-    b4_profile = b4.profile
-    b4_profile.update({"driver": "GTiff",
-                       "dtype": "float64"})
-    for b in range(0, len(bands_4)):
-        b4 = rasterio.open(bands_4[b])
-        b8 = rasterio.open(bands_8[b])
-
-        b4 = b4.read()
-        b8 = b8.read()
-        np.seterr(divide='ignore', invalid='ignore')
-
-        # Calculate MSAVI
-        msavi = 0.5*((2*(b8.astype(float)+1)) - (((2*b8.astype(float))+1)**2 - 8*(b8 - b4))**0.5)
-        filedate = bands_4[b][-28:-12]                                      # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API -28:-12 -----> qgis -23:-8
-        msavi_path.append(process_path + 'SAVI_' + filedate + '.tif')
-        with rasterio.open(msavi_path[b], "w", **b4_profile) as dest:
-            dest.write(msavi)
-    return b4_crs, msavi_path
 
 
