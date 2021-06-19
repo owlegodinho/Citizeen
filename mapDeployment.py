@@ -32,18 +32,23 @@ def map_app(save_dir, satImages, popupImgDatabase, galileo_position=[40.2059, -8
                       popup=popup).add_to(m)
     folium.features.LatLngPopup().add_to(m)
     m.add_child(googleMaps)
+
+    # for image in satImages:
+    #     layer
+
     html_position = '<center><p style="font-family:Arial; font-size: 12px"> You are here!</p></center>'
     iframe_position = branca.element.IFrame(html_position,width=105, height=34)
     popup_position = folium.Popup(iframe_position, parse_html=True)
     folium.Marker(location=galileo_position,
                   icon=folium.Icon(color='red', icon='crosshairs', prefix='fa'),
                   popup=popup_position).add_to(m)
+
     folium.LayerControl().add_to(m)
     m.save('citizeen.html')
     webbrowser.open('citizeen.html')
 
 
-map_app('/home/eouser/Downloads/', 0, 'database.csv')
+
 
 #
 # print(df['Image Name'][0])

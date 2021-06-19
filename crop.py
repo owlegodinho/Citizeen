@@ -1,49 +1,37 @@
-import glob
-
-import numpy as np
-from fiona.crs import from_epsg
-import geopandas
-import rasterio
-import fiona
-import rasterio.mask
 import os
+import numpy as np
+import rasterio
+from rasterio import mask
+import json
+import geopandas as gpd
+from bounds import convert_crs
 
 
-def crop_image(save_directory, AOI_path, crs, images):
-
-    for root, dirs, files in os.walk(AOI_path):
+def cropping(image, AOI, corrected_crs):
+    geo = gpd.read_file(AOI)
+    coords = getFeatures(geo)
+    convert_crs(image, corrected_crs, crs='EPSG:4326')
+    for root, dirs, files in os.walk(corrected_crs):
         for file in files:
-            if file.endswith('.geojson'):
-                data_proj_path = os.path.join(root,file)
+            print(file)
+            with rasterio.open(os.path.join(root,file), 'r') as src:
 
-    data = geopandas.read_file(data_proj_path[0])
-    data_proj = data.copy()
-    data_proj['geometry'] = data_proj['geometry'].to_crs(epsg=crs)
-    data_proj.crs = from_epsg(crs)
-    out_path = AOI_path + '/Corrected_crs_AOI.geojson'
-
-    # Save to disk
-    data_proj.to_file(out_path)
-
-    with fiona.open(out_path, "r") as shapefile:
-        shapes = [feature["geometry"] for feature in shapefile]
-
-    for f in range(0, len(images)):
-        with rasterio.open(images[f]) as src:
-            out_image, out_transform = rasterio.mask.mask(src, shapes, crop=True)
-            out_meta = src.meta
-
-        out_meta.update({"driver": "GTiff",
-                         "height": out_image.shape[1],
-                         "width": out_image.shape[2],
-                         "transform": out_transform,
-                         "nodata":np.NaN})
-        filepath = save_directory + 'Cropped_' + os.path.basename(images[f])                     # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API 51: -----> qgis 55:
-        with rasterio.open(filepath, "w", **out_meta) as dest:
-            dest.write(out_image)
+                out_image, out_transform = rasterio.mask.mask(src, shapes=coords, crop=True)
+                out_meta = src.meta.copy()
+                out_meta.update({'driver': 'GTiff',
+                                 'height': out_image.shape[1],
+                                 'width': out_image.shape[2],
+                                 'transform': out_transform,
+                                 'nodata': 0/np.inf,
+                                 })
+            with rasterio.open(os.path.join('cropped', 'Cropped_'+os.path.basename(image)),'w',**out_meta) as dest:
+                dest.write(out_image)
+                print(coords)
 
 
+def getFeatures(gdf):
+    """Function to parse features from GeoDataFrame in such a manner that rasterio wants them"""
+    import json
+    return [json.loads(gdf.to_json())['features'][0]['geometry']]
 
 
-# crop_image('D:/Startup_Voucher/Projetos/One_year_test/Cropped', 'D:/Startup_Voucher/Projetos/One_year_test', 32629, )
-a= crop_image(0,'/home/eouser/Downloads/',0,0)

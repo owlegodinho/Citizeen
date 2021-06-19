@@ -14,12 +14,13 @@ def ndvi(directory_path, process_path):
                 bands_4.append(os.path.join(root, name))
             elif name.endswith('B08_10m.jp2'):                              # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> qgis 'B08_10m.jp2' -----> API 'B08.jp2'
                 bands_8.append(os.path.join(root, name))
+    print(bands_4, bands_8)
     b4 = rasterio.open(bands_4[0])
     b4_crs = str(b4.crs)
     b4_crs = int(b4_crs[5:])
     b4_profile = b4.profile
     b4_profile.update({"driver": "GTiff",
-                       "dtype": "float64"})
+                       "dtype": "float32"})
     for b in range(0, len(bands_4)):
         b4 = rasterio.open(bands_4[b])
         b8 = rasterio.open(bands_8[b])
@@ -29,9 +30,9 @@ def ndvi(directory_path, process_path):
         np.seterr(divide='ignore', invalid='ignore')
 
         # Calculate NDVI
-        ndvi = (b8.astype(float) - b4.astype(float)) / (b8 + b4)
+        ndvi = (b8.astype(np.float32) - b4.astype(np.float32)) / (b8 + b4)
         filedate = bands_4[b][-28:-12]                                  # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API -28:-12 -----> qgis -23:-8
-        ndvi_path.append(process_path + 'NDVI_' + filedate + '.tif')
+        ndvi_path.append(process_path + '/NDVI_' + filedate + '.tif')
         with rasterio.open(ndvi_path[b], "w", **b4_profile) as dest:
             dest.write(ndvi)
     return b4_crs, ndvi_path
