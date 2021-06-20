@@ -10,15 +10,15 @@ from create_script_qgis import write_script
 
 # orig_directory = os.getcwd()
 qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code']  # QGIS shell command to run script on PyQgis
-#
+orig_dir = os.chdir()
 
 # # Working Computer path´s
 if socket.gethostname() == 'DESKTOP-K8VPKQJ':
-    os.chdir('C:/Users/Eduardo Godinho/Desktop/cassini')
+    working_path = 'C:/Users/Eduardo Godinho/Desktop/cassini'
     qgis_call.append('python_qgis.py')
-# elif socket.gethostname() == 'DESKTOP-M053QQK': # corre apenas esta linha num print para saberes qual é
-#     os.chdir('C:/Users/Illya Grytsayev/Desktop/OWL/cassini')
-#     qgis_call.append('"C:/Users/Illya Grytsayev/PycharmProjects/Citizeen/python_qgis.py"')
+elif socket.gethostname() == 'DESKTOP-M053QQK':
+    working_path = 'C:/Users/Illya Grytsayev/Desktop/OWL/cassini'
+    qgis_call.append('python_qgis.py')
 
 # crs, imagePath = ndvi('S2A_MSIL2A_20210504T112111_N0300_R037_T29TNE_20210504T143002'
 #      '/S2A_MSIL2A_20210504T112111_N0300_R037_T29TNE_20210504T143002.SAFE/'
@@ -26,8 +26,7 @@ if socket.gethostname() == 'DESKTOP-K8VPKQJ':
 
 # convert_crs('processed/NDVI__20210504T112111.tif', 'corrected_crs', 'EPSG:4326')
 # cropping('processed/NDVI__20210504T112111.tif', 'jardim_bot.geojson', 'corrected_crs')
-
-write_script('C:/Users/Eduardo Godinho/Desktop/cassini/cropped/Cropped_NDVI__20210504T112111.tif')
+write_script('cropped/Cropped_NDVI__20210504T112111.tif',orig_dir)
 # convert_tif_to_png('cropped/NDVI_20210504_rendered.tif', 'cropped/NDVI_20210504')
 
 # map_app(['cropped/NDVI_20210504.png'], 'database.csv')

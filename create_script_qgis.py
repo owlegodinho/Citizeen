@@ -3,7 +3,8 @@ import socket
 import subprocess as sub
 
 
-def write_script(layer_path):
+def write_script(layer_path,orig_dir):
+    os.chdir(orig_dir)
     with open('python_qgis.py', 'w') as f:
         f.writelines(['from PyQt5.QtCore import QFileInfo\n',
                       'from PyQt5.QtCore import QUrl\n',
@@ -25,7 +26,7 @@ def write_script(layer_path):
                       'target_crs.createFromUserInput(selectedcrs)\n',
                       'canvas.setDestinationCrs(target_crs)\n',
                       '# Apply style\n',
-                      'path_to_qml = "ndvi_map_style.qml"\n',
+                      'path_to_qml = "{}" + "ndvi_map_style.qml"\n'.format(orig_dir),
                       'assert raster_layer.loadNamedStyle(path_to_qml)\n\n',
                       'extent = raster_layer.extent()\n',
                       'width, height = raster_layer.width(), raster_layer.height()\n',
