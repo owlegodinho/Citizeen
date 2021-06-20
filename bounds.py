@@ -4,7 +4,7 @@ import numpy as np
 import os
 
 
-def convert_crs(filepath, save_dir, crs='EPSG:3763'):
+def convert_crs(filepath, crs='EPSG:3763'):
 
     """The function takes one .tif file and
     converts it to the selected CRS"""
@@ -20,8 +20,9 @@ def convert_crs(filepath, save_dir, crs='EPSG:3763'):
             'height': height
         })
 
-        filename = os.path.basename(filepath)[:-4]+'_'+crs.replace(':', '_')+'.tif'
-        with rio.open(os.path.join(save_dir, filename), 'w', **kwargs) as dst:
+        file_save = 'corrected_crs/'+os.path.basename(filepath)[:-5]+'_'+ crs.replace(':', '_')+'.tif'
+        # print(file_save)
+        with rio.open(file_save, 'w', **kwargs) as dst:
             reproject(
                 source=rio.band(src, 1),
                 destination=rio.band(dst, 1),
@@ -31,7 +32,9 @@ def convert_crs(filepath, save_dir, crs='EPSG:3763'):
                 dst_crs=crs,
                 resampling=Resampling.nearest
             )
-    pass
+        dst.close()
+    src.close()
+    return file_save
 
 
 def get_bounds(filepath):

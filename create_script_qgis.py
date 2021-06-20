@@ -3,9 +3,8 @@ import socket
 import subprocess as sub
 
 
-def write_script(layer_path, code_dir, working_dir):
-    # os.chdir(code_dir)
-    with open(code_dir + 'python_qgis.py', 'w') as f:
+def write_script(layer_path):
+    with open('python_qgis.py', 'w') as f:
         f.writelines(['from PyQt5.QtCore import QFileInfo\n',
                       'from PyQt5.QtCore import QUrl\n',
                       'from qgis.core import *\n',
@@ -13,7 +12,7 @@ def write_script(layer_path, code_dir, working_dir):
                       'import qgis.utils\n',
                       'from qgis.utils import iface\n',
                       'import requests\n\n',
-                      'layer_path = ' + '"{}"'.format(working_dir + layer_path),
+                      'layer_path = ' + '"{}"'.format(layer_path),
                       '# Add layer to QGIS\n',
                       'raster_layer = QgsRasterLayer(layer_path, "NDVI Raster Layer")\n',
                       'assert raster_layer.isValid()\n',
@@ -26,7 +25,7 @@ def write_script(layer_path, code_dir, working_dir):
                       'target_crs.createFromUserInput(selectedcrs)\n',
                       'canvas.setDestinationCrs(target_crs)\n',
                       '# Apply style\n',
-                      'path_to_qml = "{}" + "ndvi_map_style.qml"\n'.format(code_dir),
+                      'path_to_qml = "ndvi_map_style.qml"\n',
                       'assert raster_layer.loadNamedStyle(path_to_qml)\n\n',
                       'extent = raster_layer.extent()\n',
                       'width, height = raster_layer.width(), raster_layer.height()\n',
@@ -36,9 +35,9 @@ def write_script(layer_path, code_dir, working_dir):
                       'pipe = QgsRasterPipe()\n',
                       'pipe.set(provider.clone())\n',
                       'pipe.set(renderer.clone())\n',
-                      'file_writer = QgsRasterFileWriter("rendered_test.tif")\n',
+                      'file_writer = QgsRasterFileWriter("rendered/rendered_{}")\n'.format(os.path.basename(layer_path)),
                       'file_writer.writeRaster(pipe, width, height, extent, raster_layer.crs())\n'])
-
+    return 'rendered/rendered_{}'.format(os.path.basename(layer_path))
 #
 # write_script('C:/Users/Eduardo Godinho/Desktop/cassini/cropped/Cropped_NDVI__20210504T112111.tif')
 #
