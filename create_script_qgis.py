@@ -1,8 +1,9 @@
 import os
+import socket
+import subprocess as sub
 
 
-def write_script(orig_dir,layer_path):
-    os.chdir(orig_dir)
+def write_script(layer_path):
     with open('python_qgis.py', 'w') as f:
         f.writelines(['from PyQt5.QtCore import QFileInfo\n',
                       'from PyQt5.QtCore import QUrl\n',
@@ -11,10 +12,9 @@ def write_script(orig_dir,layer_path):
                       'import qgis.utils\n',
                       'from qgis.utils import iface\n',
                       'import requests\n\n',
-                      'layer_path = ' +'"'+ str(layer_path) + '"\n\n',
+                      'layer_path = ' + '"{}"'.format(layer_path),
                       '# Add layer to QGIS\n',
-                      'source = layer_path\n',
-                      'raster_layer = QgsRasterLayer(source, "NDVI Raster Layer")\n',
+                      'raster_layer = QgsRasterLayer(layer_path, "NDVI Raster Layer")\n',
                       'assert raster_layer.isValid()\n',
                       'my_project = QgsProject.instance()\n',
                       'my_project.addMapLayer(raster_layer)\n\n',
@@ -25,7 +25,7 @@ def write_script(orig_dir,layer_path):
                       'target_crs.createFromUserInput(selectedcrs)\n',
                       'canvas.setDestinationCrs(target_crs)\n',
                       '# Apply style\n',
-                      'path_to_qml = "C:/Users/Illya Grytsayev/Desktop/OWL/cassini/cropped/ndvi_map_style.qml"\n',
+                      'path_to_qml = "ndvi_map_style.qml"\n',
                       'assert raster_layer.loadNamedStyle(path_to_qml)\n\n',
                       'extent = raster_layer.extent()\n',
                       'width, height = raster_layer.width(), raster_layer.height()\n',
@@ -35,5 +35,18 @@ def write_script(orig_dir,layer_path):
                       'pipe = QgsRasterPipe()\n',
                       'pipe.set(provider.clone())\n',
                       'pipe.set(renderer.clone())\n',
-                      'file_writer = QgsRasterFileWriter("C:/Users/Illya Grytsayev/Desktop/OWL/cassini/cropped/rendered_test.tif")\n',
+                      'file_writer = QgsRasterFileWriter("rendered_test.tif")\n',
                       'file_writer.writeRaster(pipe, width, height, extent, raster_layer.crs())\n'])
+
+#
+# write_script('C:/Users/Eduardo Godinho/Desktop/cassini/cropped/Cropped_NDVI__20210504T112111.tif')
+#
+# qgis_call = ['C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code']  # QGIS shell command to run script on PyQgis
+# #
+#
+# # # Working Computer path´s
+# if socket.gethostname() == 'DESKTOP-K8VPKQJ':
+#     # os.chdir('C:/Users/Eduardo Godinho/Desktop/cassini')
+#     qgis_call.append('python_qgis.py')
+#
+# sub.Popen(qgis_call, stdout=sub.PIPE, stderr=sub.PIPE)
