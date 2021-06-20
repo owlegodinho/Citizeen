@@ -13,11 +13,12 @@ qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code', 'python_
 
 crs, imagePath = ndvi('S2_bands', 'processed')
 
-converted_crs_path = convert_crs(imagePath, 'corrected_crs', 'EPSG:4326')
+converted_crs_path = convert_crs(imagePath[0], 'corrected_crs', 'EPSG:4326')
+
 cropped_save_path = cropping(converted_crs_path, 'jardim_bot.geojson', 'corrected_crs')
 
 
-rendered_path = write_script(cropped_save_path, )
+rendered_path = write_script(cropped_save_path)
 sub.Popen(qgis_call, stdout=sub.PIPE, stderr=sub.PIPE)
 
 png_files = convert_tif_to_png(rendered_path, os.path.join('png_files', os.path.basename(converted_crs_path)))

@@ -56,5 +56,4 @@ def map_app(satImages, popupImgDatabase, galileo_position=(40.2059, -8.4241), si
     colormap.add_to(m)
 
     m.save('citizeen.html')
-    print('aqui')
     webbrowser.open('citizeen.html')
