@@ -3,9 +3,9 @@ import socket
 import subprocess as sub
 
 
-def write_script(layer_path,orig_dir):
-    os.chdir(orig_dir)
-    with open('python_qgis.py', 'w') as f:
+def write_script(layer_path, code_dir, working_dir):
+    # os.chdir(code_dir)
+    with open(code_dir + 'python_qgis.py', 'w') as f:
         f.writelines(['from PyQt5.QtCore import QFileInfo\n',
                       'from PyQt5.QtCore import QUrl\n',
                       'from qgis.core import *\n',
@@ -13,7 +13,7 @@ def write_script(layer_path,orig_dir):
                       'import qgis.utils\n',
                       'from qgis.utils import iface\n',
                       'import requests\n\n',
-                      'layer_path = ' + '"{}"'.format(layer_path),
+                      'layer_path = ' + '"{}"'.format(working_dir + layer_path),
                       '# Add layer to QGIS\n',
                       'raster_layer = QgsRasterLayer(layer_path, "NDVI Raster Layer")\n',
                       'assert raster_layer.isValid()\n',
@@ -26,7 +26,7 @@ def write_script(layer_path,orig_dir):
                       'target_crs.createFromUserInput(selectedcrs)\n',
                       'canvas.setDestinationCrs(target_crs)\n',
                       '# Apply style\n',
-                      'path_to_qml = "{}" + "ndvi_map_style.qml"\n'.format(orig_dir),
+                      'path_to_qml = "{}" + "ndvi_map_style.qml"\n'.format(code_dir),
                       'assert raster_layer.loadNamedStyle(path_to_qml)\n\n',
                       'extent = raster_layer.extent()\n',
                       'width, height = raster_layer.width(), raster_layer.height()\n',
