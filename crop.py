@@ -13,7 +13,7 @@ def cropping(image, AOI, corrected_crs):
     convert_crs(image, corrected_crs, crs='EPSG:4326')
     for root, dirs, files in os.walk(corrected_crs):
         for file in files:
-            print(file)
+            # print(file)
             with rasterio.open(os.path.join(root,file), 'r') as src:
 
                 out_image, out_transform = rasterio.mask.mask(src, shapes=coords, crop=True)
@@ -24,10 +24,11 @@ def cropping(image, AOI, corrected_crs):
                                  'transform': out_transform,
                                  'nodata': 0/np.inf,
                                  })
-            with rasterio.open(os.path.join('cropped', 'Cropped_'+os.path.basename(image)),'w',**out_meta) as dest:
+            cropped_save_path = os.path.join('cropped', 'Cropped_'+os.path.basename(image))
+            with rasterio.open(cropped_save_path, 'w', **out_meta) as dest:
                 dest.write(out_image)
-                print(coords)
-
+                # print(coords)
+    return cropped_save_path
 
 def getFeatures(gdf):
     """Function to parse features from GeoDataFrame in such a manner that rasterio wants them"""

@@ -21,7 +21,8 @@ def convert_crs(filepath, save_dir, crs='EPSG:3763'):
         })
 
         filename = os.path.basename(filepath)[:-4]+'_'+crs.replace(':', '_')+'.tif'
-        with rio.open(os.path.join(save_dir, filename), 'w', **kwargs) as dst:
+        converted_crs_path = os.path.join(save_dir, filename)
+        with rio.open(converted_crs_path, 'w', **kwargs) as dst:
             reproject(
                 source=rio.band(src, 1),
                 destination=rio.band(dst, 1),
@@ -31,7 +32,7 @@ def convert_crs(filepath, save_dir, crs='EPSG:3763'):
                 dst_crs=crs,
                 resampling=Resampling.nearest
             )
-    pass
+    return converted_crs_path
 
 
 def get_bounds(filepath):

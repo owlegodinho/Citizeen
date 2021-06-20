@@ -31,7 +31,7 @@ def ndvi(directory_path, process_path):
 
         # Calculate NDVI
         ndvi = (b8.astype(np.float32) - b4.astype(np.float32)) / (b8 + b4)
-        filedate = bands_4[b][-28:-12]                                  # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API -28:-12 -----> qgis -23:-8
+        filedate = bands_4[b][-27:-12]                                  # ALTERAR DEPENDENDO DA FONTE DOS DADOS ---> API -28:-12 -----> qgis -23:-8
         ndvi_path.append(process_path + '/NDVI_' + filedate + '.tif')
         with rasterio.open(ndvi_path[b], "w", **b4_profile) as dest:
             dest.write(ndvi)

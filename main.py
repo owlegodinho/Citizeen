@@ -9,28 +9,19 @@ import subprocess as sub
 from create_script_qgis import write_script
 
 # orig_directory = os.getcwd()
-qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code']  # QGIS shell command to run script on PyQgis
-code_dir = os.getcwd()
-working_dir = 'C:/'
-# # Working Computer path´s
-if socket.gethostname() == 'DESKTOP-K8VPKQJ':
-    working_dir = 'C:/Users/Eduardo Godinho/Desktop/cassini'
-    qgis_call.append('python_qgis.py')
-elif socket.gethostname() == 'DESKTOP-M053QQK':
-    working_dir = 'C:/Users/Illya Grytsayev/Desktop/OWL/cassini'
-    qgis_call.append('python_qgis.py')
+qgis_call = [r'C:/OSGeo4W64/OSGeo4W.bat', 'qgis', '--nologo', '--code', 'python_qgis.py']  # QGIS shell command to run script on PyQgis
 
-os.chdir(working_dir)
-# crs, imagePath = ndvi('S2A_MSIL2A_20210504T112111_N0300_R037_T29TNE_20210504T143002'
-#      '/S2A_MSIL2A_20210504T112111_N0300_R037_T29TNE_20210504T143002.SAFE/'
-#      'GRANULE/L2A_T29TNE_A030636_20210504T112445/IMG_DATA/R10m', 'processed')
+crs, imagePath = ndvi('S2_bands', 'processed')
 
-# convert_crs('processed/NDVI__20210504T112111.tif', 'corrected_crs', 'EPSG:4326')
-# cropping('processed/NDVI__20210504T112111.tif', 'jardim_bot.geojson', 'corrected_crs')
-write_script('cropped/Cropped_NDVI__20210504T112111.tif', code_dir, working_dir)
-# convert_tif_to_png('cropped/NDVI_20210504_rendered.tif', 'cropped/NDVI_20210504')
+converted_crs_path = convert_crs(imagePath, 'corrected_crs', 'EPSG:4326')
+cropped_save_path = cropping(converted_crs_path, 'jardim_bot.geojson', 'corrected_crs')
 
-# map_app(['cropped/NDVI_20210504.png'], 'database.csv')
+
+rendered_path = write_script(cropped_save_path, )
 sub.Popen(qgis_call, stdout=sub.PIPE, stderr=sub.PIPE)
+
+png_files = convert_tif_to_png(rendered_path, os.path.join('png_files', os.path.basename(converted_crs_path)))
+map_app([png_files], 'database.csv')
+
 
 
