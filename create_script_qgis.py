@@ -35,7 +35,7 @@ def write_script(layer_path):
                       'pipe = QgsRasterPipe()\n',
                       'pipe.set(provider.clone())\n',
                       'pipe.set(renderer.clone())\n',
-                      'file_writer = QgsRasterFileWriter("rendered_{}")\n'.format(os.path.basename(layer_path)),
+                      'file_writer = QgsRasterFileWriter("rendered/rendered_{}")\n'.format(os.path.basename(layer_path)),
                       'file_writer.writeRaster(pipe, width, height, extent, raster_layer.crs())\n'])
     return 'rendered/rendered_{}'.format(os.path.basename(layer_path))
 #

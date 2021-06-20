@@ -10,7 +10,6 @@ from bounds import convert_crs
 def cropping(image, AOI, corrected_crs):
     geo = gpd.read_file(AOI)
     coords = getFeatures(geo)
-    convert_crs(image, corrected_crs, crs='EPSG:4326')
     for root, dirs, files in os.walk(corrected_crs):
         for file in files:
             # print(file)

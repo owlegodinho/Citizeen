@@ -6,5 +6,5 @@ def convert_tif_to_png(file, output_name):
     driver = gdal.GetDriverByName('PNG')
     driver.CreateCopy(output_name + '.png', open_gdal)
 
-    return 'png_files/' + output_name + '.png'
+    return output_name + '.png'
 
